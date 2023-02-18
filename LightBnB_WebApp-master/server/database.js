@@ -3,6 +3,7 @@ const users = require('./json/users.json');
 
 //Code to connect to the lightbnb database
 const { Pool } = require('pg');
+const { query } = require('express');
 const pool = new Pool({
   user: 'vagrant',
   password: '123',
@@ -99,7 +100,10 @@ exports.getAllReservations = getAllReservations;
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = function(options, limit = 10) {
+  console.log(options);
+  console.log(options.minimum_price_per_night);
   const queryParams = [];
+  let conjunction;
   let queryString = `SELECT properties.*, AVG(property_reviews.rating) AS average_rating
   FROM properties
   LEFT JOIN property_reviews ON properties.id = property_id
@@ -109,7 +113,30 @@ const getAllProperties = function(options, limit = 10) {
     queryParams.push(`%${options.city}%`);
     queryString += `WHERE city LIKE $${queryParams.length} `;
   }
-
+  if(options.owner_id) {
+    const conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
+    queryParams.push(options.owner_id);
+    queryString += ` ${conjunction} properties.owner_id = $${queryParams.length} `;
+  }
+  if (options.minimum_price_per_night) {
+    conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
+    queryParams.push(options.minimum_price_per_night * 100);
+    queryString += `
+      ${conjunction} cost_per_night >= $${queryParams.length} `;
+  }
+  if (options.maximum_price_per_night) {
+    conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
+    queryParams.push(options.maximum_price_per_night * 100);
+    queryString += `
+      ${conjunction} cost_per_night <= $${queryParams.length} `;
+  }
+  if (options.minimum_rating) {
+    conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
+    queryParams.push(options.minimum_rating);
+    queryString += `
+      ${conjunction} rating >= $${queryParams.length} `;
+  }
+  
   queryParams.push(limit);
   queryString += `
   GROUP BY properties.id
