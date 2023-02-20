@@ -1,15 +1,7 @@
 const properties = require('./json/properties.json');
 const users = require('./json/users.json');
+const pool = require('../db/db');
 
-//Code to connect to the lightbnb database
-const { Pool } = require('pg');
-const { query } = require('express');
-const pool = new Pool({
-  user: 'vagrant',
-  password: '123',
-  host: 'localhost',
-  database: 'lightbnb'
-});
 
 /// Users
 
