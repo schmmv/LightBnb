@@ -11,7 +11,7 @@ const pool = require('../db/db');
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function(email) {
-  return pool 
+  return pool
     .query(`SELECT * FROM users WHERE email = $1;`, [email])
     .then((result) => {
       return result.rows[0] || null;
@@ -39,22 +39,21 @@ const getUserWithId = function(id) {
 };
 exports.getUserWithId = getUserWithId;
 
-
 /**
  * Add a new user to the database.
  * @param {{name: string, password: string, email: string}} user
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser =  function(user) {
- return pool
-  .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;`, [user.name, user.email, user.password])
-  .then((result) => {
-    return result.rows[0];
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
-}
+  return pool
+    .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;`, [user.name, user.email, user.password])
+    .then((result) => {
+      return result.rows[0];
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
 exports.addUser = addUser;
 
 /// Reservations
@@ -80,7 +79,7 @@ const getAllReservations = function(guest_id, limit = 10) {
     .catch((err) => {
       console.log(err.message);
     });
-}
+};
 exports.getAllReservations = getAllReservations;
 
 /// Properties
@@ -100,11 +99,11 @@ const getAllProperties = function(options, limit = 10) {
   LEFT JOIN property_reviews ON properties.id = property_id
   `;
 
-  if(options.city) {
+  if (options.city) {
     queryParams.push(`%${options.city}%`);
     queryString += `WHERE city LIKE $${queryParams.length} `;
   }
-  if(options.owner_id) {
+  if (options.owner_id) {
     const conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.owner_id);
     queryString += ` ${conjunction} properties.owner_id = $${queryParams.length} `;
@@ -135,9 +134,6 @@ const getAllProperties = function(options, limit = 10) {
   LIMIT $${queryParams.length};
   `;
   
-  // console.log(queryString);
-  // console.log(queryParams);
-
   return pool.query(queryString, queryParams).then((result) => result.rows)
     .catch((err) => {
       console.log(err.message);
@@ -162,5 +158,5 @@ const addProperty = function(property) {
     .catch((err)=> {
       console.log(err.message);
     });
-}
+};
 exports.addProperty = addProperty;
