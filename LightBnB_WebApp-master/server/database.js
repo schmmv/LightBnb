@@ -1,10 +1,6 @@
-const properties = require('./json/properties.json');
-const users = require('./json/users.json');
 const pool = require('../db/db');
 
-
 /// Users
-
 /**
  * Get a single user from the database given their email.
  * @param {String} email The email of the user.
@@ -16,12 +12,9 @@ const getUserWithEmail = function(email) {
       SELECT * 
       FROM users 
       WHERE email = $1;`, [email])
-    .then((result) => {
-      return result.rows[0] || null;
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    .then((result) => result.rows[0] || null);
+    //bubble up to userRoutes for error handling
+
 };
 exports.getUserWithEmail = getUserWithEmail;
 
@@ -36,12 +29,8 @@ const getUserWithId = function(id) {
       SELECT * 
       FROM users 
       WHERE id = $1;`, [id])
-    .then((result) => {
-      return result.rows[0] || null;
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    .then((result) => result.rows[0] || null);
+   //bubble up to userRoutes for error handling
 };
 exports.getUserWithId = getUserWithId;
 
@@ -55,17 +44,13 @@ const addUser =  function(user) {
     .query(`
       INSERT INTO users (name, email, password) 
       VALUES ($1, $2, $3) RETURNING *;`, [user.name, user.email, user.password])
-    .then((result) => {
-      return result.rows[0];
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    .then((result) => result.rows[0]);
+    //bubble up to userRoutes for error handling
+
 };
 exports.addUser = addUser;
 
 /// Reservations
-
 /**
  * Get all reservations for a single user.
  * @param {string} guest_id The id of the user.
@@ -82,17 +67,12 @@ const getAllReservations = function(guest_id, limit = 10) {
       GROUP BY properties.id, reservations.id
       ORDER BY start_date
       LIMIT $2;`, [guest_id, limit])
-    .then((result) => {
-      return result.rows;
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    .then((result) => result.rows);
+    //bubble up to apiRoutes for error handling
 };
 exports.getAllReservations = getAllReservations;
 
 /// Properties
-
 /**
  * Get all properties.
  * @param {{}} options An object containing query options.
@@ -106,58 +86,51 @@ const getAllProperties = function(options, limit = 10) {
   let queryString = `
     SELECT properties.*, AVG(property_reviews.rating) AS average_rating
     FROM properties
-    LEFT JOIN property_reviews ON properties.id = property_id
-    `;
+    LEFT JOIN property_reviews ON properties.id = property_id`;
 
+  //Add to queryString if any search filter options have been used
   if (options.city) {
     queryParams.push(`%${options.city}%`);
     queryString += `
-      WHERE city LIKE $${queryParams.length} 
-      `;
+      WHERE city LIKE $${queryParams.length}`;
   }
   if (options.owner_id) {
     const conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.owner_id);
     queryString += `
-      ${conjunction} properties.owner_id = $${queryParams.length} 
-      `;
+      ${conjunction} properties.owner_id = $${queryParams.length}`;
   }
   if (options.minimum_price_per_night) {
     conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.minimum_price_per_night * 100);
     queryString += `
-      ${conjunction} cost_per_night >= $${queryParams.length} 
-      `;
+      ${conjunction} cost_per_night >= $${queryParams.length}`;
   }
   if (options.maximum_price_per_night) {
     conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.maximum_price_per_night * 100);
     queryString += `
-      ${conjunction} cost_per_night <= $${queryParams.length} 
-      `;
+      ${conjunction} cost_per_night <= $${queryParams.length}`;
   }
   if (options.minimum_rating) {
     conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.minimum_rating);
     queryString += `
-      ${conjunction} rating >= $${queryParams.length} 
-      `;
+      ${conjunction} rating >= $${queryParams.length}`;
   }
   
   queryParams.push(limit);
   queryString += `
     GROUP BY properties.id
     ORDER BY cost_per_night
-    LIMIT $${queryParams.length};
-    `;
+    LIMIT $${queryParams.length};`;
   
-  return pool.query(queryString, queryParams).then((result) => result.rows)
-    .catch((err) => {
-      console.log(err.message);
-    });
+  return pool
+    .query(queryString, queryParams)
+    .then((result) => result.rows);
+    //bubble up to apiRoutes for error handling
 };
 exports.getAllProperties = getAllProperties;
-
 
 /**
  * Add a property to the database
@@ -198,11 +171,7 @@ const addProperty = function(property) {
       property.country,
       property.street,
       property.post_code])
-    .then((result) => {
-      return result.rows[0];
-    })
-    .catch((err)=> {
-      console.log(err.message);
-    });
+    .then((result) => result.rows[0]);
+    //bubble up to apiRoutes for error handling
 };
 exports.addProperty = addProperty;
