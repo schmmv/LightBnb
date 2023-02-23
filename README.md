@@ -16,3 +16,22 @@ A simple Airbnb clone that uses server-side Javascript to display the informatio
 
 ## ERD
 View the entity relationship diagram for the database [here](https://github.com/schmmv/LightBnb/blob/master/docs/erd.png?raw=true).
+
+## Final Product
+Login
+![Login] (https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/login.png?raw=true)
+
+View Listings
+![Listings] (https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/listings.png?raw=true)
+
+Search Listings
+![Search] (https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/search.png?raw=true)
+
+## Dependencies
+- bcrypt
+- body-parser
+- cookie-session
+- dotenv
+- express
+- nodemon
+- pg (node-postgress)
