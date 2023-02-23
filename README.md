@@ -12,7 +12,7 @@ A simple Airbnb clone that uses server-side Javascript to display the informatio
 1. Install dependencies using the `npm install` command.
 2. Start the web server in LightBnB_WebApp-master using the `npm run local` command.  
 3. Go to http://localhost:3000 in your browser, this is where the app is served. Or use your own variables in a .env file
-4. Start planning, listing, or reviewing!
+4. Start planning, listing, or reviewing! Sign up or use jacksonrose@hotmail.com and 'password' to trial.
 
 ## ERD
 View the entity relationship diagram for the database [here](https://github.com/schmmv/LightBnb/blob/master/docs/erd.png?raw=true).
