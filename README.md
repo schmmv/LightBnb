@@ -19,13 +19,13 @@ View the entity relationship diagram for the database [here](https://github.com/
 
 ## Final Product
 Login
-![Login] (https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/login.png?raw=true)
+![Login](https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/login.png?raw=true)
 
 View Listings
-![Listings] (https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/listings.png?raw=true)
+![Listings](https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/listings.png?raw=true)
 
 Search Listings
-![Search] (https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/search.png?raw=true)
+![Search](https://github.com/schmmv/LightBnb/blob/master/docs/screenshots/search.png?raw=true)
 
 ## Dependencies
 - bcrypt
