@@ -100,6 +100,7 @@ const getAllProperties = function(options, limit = 10) {
     queryString += `
       ${conjunction} properties.owner_id = $${queryParams.length}`;
   }
+  //price_per_night multiplied by 100 since database stores it as cents
   if (options.minimum_price_per_night) {
     conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.minimum_price_per_night * 100);
