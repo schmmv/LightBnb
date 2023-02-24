@@ -14,15 +14,16 @@ A simple Airbnb clone that uses server-side Javascript to display the informatio
 1. Install PostgreSQL if it is not already on your machine
 2. Connect to the command line shell by typing `psql`
 3. Create database by typing `CREATE DATABASE lightbnb`
-4. Create the tables by running the migration files (ensure you are in the LightBnb root folder):
+4. Connect to the database: `\c lightbnb`
+5. Create the tables by running the migration files (ensure you are in the LightBnb root folder):
 
     `\i migrations/01_schema.sql`
 
     `\i migrations/02_additional_schema.sql`
-5. Populate tables with data by running the seed files:
+6. Populate tables with data by running the seed files:
 
     `\i seeds/01_seeds.sql`
-    
+
     `\i seeds/02_seeds.sql`
 
 ### Using the app
