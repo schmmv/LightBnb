@@ -113,19 +113,22 @@ const getAllProperties = function(options, limit = 10) {
     queryString += `
       ${conjunction} cost_per_night <= $${queryParams.length}`;
   }
+  //Group by property 
+  queryString += `
+    GROUP BY properties.id`;
+
+  //Apply rating condition to grouped properties 
   if (options.minimum_rating) {
-    conjunction = queryParams.length > 0 ? 'AND' : 'WHERE';
     queryParams.push(options.minimum_rating);
     queryString += `
-      ${conjunction} rating >= $${queryParams.length}`;
+      HAVING AVG(property_reviews.rating) >= $${queryParams.length}`;
   }
   
   queryParams.push(limit);
   queryString += `
-    GROUP BY properties.id
     ORDER BY cost_per_night
     LIMIT $${queryParams.length};`;
-  
+  console.log(queryString);
   return pool
     .query(queryString, queryParams)
     .then((result) => result.rows);
